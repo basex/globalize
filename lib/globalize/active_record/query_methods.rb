@@ -85,11 +85,11 @@ module Globalize
 
         # Inject `full_column` to the select values to avoid
         # PG::InvalidColumnReference errors with distinct queries on Postgres
-        if select_values.empty?
-          self.select_values = [self.arel_table[Arel.star], full_column]
-        else
-          self.select_values << full_column
-        end
+        # if select_values.empty?
+        #   self.select_values = [self.arel_table[Arel.star], full_column]
+        # else
+        #   self.select_values << full_column
+        # end
 
         translation_class.arel_table[column].send(direction)
       end
