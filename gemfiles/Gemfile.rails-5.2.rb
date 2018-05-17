@@ -2,8 +2,8 @@ source "https://rubygems.org"
 
 gemspec path: "../"
 
-gem "activemodel", [">= 4.2.6", "< 5.0"]
-gem "activerecord", [">= 4.2.6", "< 5.0"]
+gem "activemodel", [">= 5.2", "< 5.3"]
+gem "activerecord", [">= 5.2", "< 5.3"]
 
 gem "pry"
 
