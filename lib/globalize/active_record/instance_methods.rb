@@ -1,6 +1,9 @@
 module Globalize
   module ActiveRecord
     module InstanceMethods
+      # Default for the attribute readers, which run on every attribute read (not only translated ones).
+      NO_OPTIONS = {}.freeze
+
       delegate :translated_locales, :to => :translations
 
       def globalize
@@ -39,7 +42,7 @@ module Globalize
         end
       end
 
-      def read_attribute(attr_name, options = {}, &block)
+      def read_attribute(attr_name, options = NO_OPTIONS, &block)
         name = if self.class.attribute_alias?(attr_name)
                  self.class.attribute_alias(attr_name).to_s
                else
@@ -51,7 +54,7 @@ module Globalize
         _read_attribute(name, options, &block)
       end
 
-      def _read_attribute(attr_name, options = {}, &block)
+      def _read_attribute(attr_name, options = NO_OPTIONS, &block)
         translated_value = read_translated_attribute(attr_name, options)
         translated_value.nil? ? super(attr_name, &block) : translated_value
       end
@@ -234,8 +237,7 @@ module Globalize
 
       # nil or value
       def read_translated_attribute(name, options)
-        options = {:translated => true, :locale => nil}.merge(options)
-        return nil unless options[:translated]
+        return nil if options.key?(:translated) && !options[:translated]
         return nil unless translated?(name)
 
         globalize.fetch(options[:locale] || Globalize.locale, name)

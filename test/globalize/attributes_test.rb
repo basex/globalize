@@ -3,6 +3,18 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class AttributesTest < Minitest::Spec
 
+  describe 'untranslated attribute reader' do
+    it 'does not allocate option hashes on every read' do
+      post = Post.create(:title => 'title')
+      post.blog_id # the first read casts the value
+
+      allocated = GC.stat(:total_allocated_objects)
+      1000.times { post.blog_id }
+
+      assert_operator GC.stat(:total_allocated_objects) - allocated, :<, 1000
+    end
+  end
+
   describe 'translated attribute reader' do
     it 'is defined for translated attributes' do
       assert Post.new.respond_to?(:title)
