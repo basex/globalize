@@ -63,7 +63,10 @@ module Globalize
         translated_attribute_names.map(&:to_s) + super
       end
 
-      delegate :translated?, :to => :class
+      # Not `delegate`: its `...` forwarding allocates an array per call before Ruby 3.4.
+      def translated?(name)
+        self.class.translated?(name)
+      end
 
       def translated_attributes
         translated_attribute_names.inject({}) do |attributes, name|
